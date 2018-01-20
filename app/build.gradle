@@ -29,6 +29,7 @@ dependencies {
             deps.appcompat,
             deps.recyclerview,
             deps.design,
+            deps.fresco,
             deps.rxJava,
             deps.rxKotlin,
             deps.rxAndroid,
