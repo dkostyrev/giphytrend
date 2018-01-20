@@ -1,6 +1,8 @@
 <manifest package="com.kostyrev.giphytrend"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<uses-permission android:name="android.permission.INTERNET" />
+
 	<application
 		android:name=".GiphyTrendingApplication"
 		android:allowBackup="true"
