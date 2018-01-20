@@ -7,18 +7,13 @@ import com.kostyrev.giphytrend.api.model.Pagination
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import io.reactivex.Observable
 
-interface TrendingInteractor {
+class TrendingInteractor(private val api: GiphyApi,
+                         private val schedulers: SchedulersFactory) {
 
-    fun loadTrending(pagination: Pagination?): Observable<PagedResponse<List<Gif>>>
-
-}
-
-class TrendingInteractorImpl(private val api: GiphyApi,
-                             private val schedulers: SchedulersFactory) : TrendingInteractor {
-
-    override fun loadTrending(pagination: Pagination?): Observable<PagedResponse<List<Gif>>> {
+    fun loadTrending(pagination: Pagination?): Observable<PagedResponse<List<Gif>>> {
         return api.getTrending(pagination?.offset)
                 .subscribeOn(schedulers.io())
+
     }
 
 }
