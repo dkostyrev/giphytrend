@@ -7,8 +7,8 @@ sealed class LoadAction : TrendingAction {
 
     class Loading : LoadAction()
 
-    class Loaded(val result: PagedResponse<List<Gif>>)
+    class Loaded(val result: PagedResponse<List<Gif>>) : LoadAction()
 
-    class Error(val error: String)
+    class Error(val error: String) : LoadAction()
 
 }

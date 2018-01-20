@@ -4,6 +4,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
+	<ProgressBar
+		android:id="@+id/progress_bar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:visibility="gone"
+		tools:visibility="visible" />
+
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/swipe_refresh_layout"
 		android:layout_width="match_parent"
@@ -16,13 +24,5 @@
 			tools:listitem="@layout/gif_item" />
 
 	</android.support.v4.widget.SwipeRefreshLayout>
-
-	<ProgressBar
-		android:id="@+id/progress_bar"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:visibility="gone"
-		tools:visibility="visible" />
 
 </FrameLayout>

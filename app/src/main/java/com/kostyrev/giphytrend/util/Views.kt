@@ -1,6 +1,12 @@
 package com.kostyrev.giphytrend.util
 
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
+import io.reactivex.Observable
+
+fun View.setVisible(visible: Boolean) {
+    visibility = if (visible) View.VISIBLE else View.GONE
+}
 
 val View.definedWidth: Int
     get() {
@@ -21,5 +27,17 @@ val View.definedHeight: Int
             return measuredHeight
         } else {
             return Math.max(layoutParams?.height ?: 0, 0)
+        }
+    }
+
+val SwipeRefreshLayout.refreshes: Observable<Unit>
+    get() {
+        return Observable.create {
+            it.setCancellable {
+                setOnRefreshListener(null)
+            }
+            setOnRefreshListener {
+                it.onNext(Unit)
+            }
         }
     }

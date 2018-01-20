@@ -11,7 +11,7 @@ class GifItemView(view: View) : ListItemView<GifItem>, RecyclerView.ViewHolder(v
     private val draweeView: SimpleDraweeView = view.findViewById(R.id.drawee_view)
 
     override fun render(item: GifItem) {
-
+        draweeView.setImageURI(item.image, this)
     }
 
 }

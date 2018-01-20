@@ -1,6 +1,7 @@
 package com.kostyrev.giphytrend
 
 import android.app.Application
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.kostyrev.giphytrend.di.ApplicationComponent
 import com.kostyrev.giphytrend.di.ApplicationComponentProvider
 import com.kostyrev.giphytrend.di.ApplicationModule
@@ -12,6 +13,7 @@ class GiphyTrendingApplication : Application(), ApplicationComponentProvider {
 
     override fun onCreate() {
         super.onCreate()
+        Fresco.initialize(this)
         component = DaggerApplicationComponent
                 .builder()
                 .applicationModule(ApplicationModule(this))

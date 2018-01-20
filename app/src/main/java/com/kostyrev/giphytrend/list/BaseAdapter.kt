@@ -4,7 +4,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
-abstract class BaseAdapter<V : ListItemView<I>, I : ListItem>(var data: List<I>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class BaseAdapter<V : ListItemView<I>, I : ListItem>(data: List<I>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var data: List<I> = data
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private var inflater: LayoutInflater? = null
 

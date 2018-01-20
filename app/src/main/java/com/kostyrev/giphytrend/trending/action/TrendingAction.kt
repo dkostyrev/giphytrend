@@ -1,3 +1,5 @@
 package com.kostyrev.giphytrend.trending.action
 
-interface TrendingAction
+import com.kostyrev.redux.Action
+
+interface TrendingAction : Action

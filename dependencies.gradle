@@ -7,7 +7,7 @@ ext.versions = [
         rxKotlin      : "2.1.0",
         rxAndroid     : "2.0.1",
         rxRelay       : "2.0.0",
-        dagger        : "2.12",
+        dagger        : "2.14.1",
         gson          : "2.8.2",
         retrofit      : "2.3.0",
         okhttp        : "3.9.0",
