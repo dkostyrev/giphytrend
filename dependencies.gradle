@@ -29,6 +29,7 @@ ext.deps = [
         rxAndroid      : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
         rxRelay        : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
         dagger         : "com.google.dagger:dagger:$versions.dagger",
+        daggerCompiler : "com.google.dagger:dagger-compiler:$versions.dagger",
         retrofit       : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofit_gson  : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
         retrofit_rxjava: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",

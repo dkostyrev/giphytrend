@@ -38,6 +38,8 @@ dependencies {
             deps.gson
     )
 
+    kapt deps.daggerCompiler
+
     testImplementation(
             deps.junit,
             deps.mockito,
