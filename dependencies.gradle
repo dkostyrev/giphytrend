@@ -1,0 +1,45 @@
+ext.versions = [
+        kotlin        : "1.2.20",
+        gradlePlugin  : "3.0.1",
+        supportLibrary: "27.0.0",
+        rxJava        : "2.1.5",
+        rxKotlin      : "2.1.0",
+        rxAndroid     : "2.0.1",
+        rxRelay       : "2.0.0",
+        dagger        : "2.12",
+        gson          : "2.8.2",
+        retrofit      : "2.3.0",
+        okhttp        : "3.9.0",
+        junit         : "4.12",
+        mockito       : "2.11.0",
+        mockitoKotlin : "1:1.5.0",
+        testRunner    : "1.0.1",
+        espresso      : "3.0.1"
+]
+
+ext.deps = [
+        kotlinPlugin   : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+        gradlePlugin   : "com.android.tools.build:gradle:$versions.gradlePlugin",
+        kotlinStdlib   : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin",
+        appcompat      : "com.android.support:appcompat-v7:$versions.supportLibrary",
+        recyclerview   : "com.android.support:recyclerview-v7:$versions.supportLibrary",
+        design         : "com.android.support:design:$versions.supportLibrary",
+        rxJava         : "io.reactivex.rxjava2:rxjava:$versions.rxJava",
+        rxKotlin       : "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin",
+        rxAndroid      : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
+        rxRelay        : "com.jakewharton.rxrelay2:rxrelay:$versions.rxRelay",
+        dagger         : "com.google.dagger:dagger:$versions.dagger",
+        retrofit       : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        retrofit_gson  : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+        retrofit_rxjava: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+        okhttp         : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        gson           : "com.google.code.gson:gson:$versions.gson",
+
+        junit          : "junit:junit:$versions.junit",
+        mockito        : "org.mockito:mockito-core:$versions.mockito",
+        mockitoKotlin  : "com.nhaarman:mockito-kotlin-kt1.$versions.mockitoKotlin",
+
+        testRunner     : "com.android.support.test:runner:$versions.testRunner",
+        espresso       : "com.android.support.test.espresso:espresso-core:$versions.espresso"
+]
+
