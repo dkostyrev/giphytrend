@@ -24,6 +24,7 @@ android {
 
 dependencies {
     implementation(
+            project(':redux'),
             deps.kotlinStdlib,
             deps.appcompat,
             deps.recyclerview,

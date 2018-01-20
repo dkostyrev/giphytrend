@@ -1,0 +1,15 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation(
+            deps.kotlinStdlib,
+            deps.rxKotlin,
+            deps.rxRelay
+    )
+
+    testImplementation(
+            deps.junit,
+            deps.mockito,
+            deps.mockitoKotlin
+    )
+}
