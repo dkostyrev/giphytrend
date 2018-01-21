@@ -5,6 +5,7 @@ import com.kostyrev.giphytrend.di.PerActivity
 import com.kostyrev.giphytrend.trending.TrendingState
 import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.middleware.LoadTrendingMiddleware
+import com.kostyrev.giphytrend.trending.middleware.NavigationMiddleware
 import com.kostyrev.giphytrend.trending.reducer.LoadActionReducer
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Middleware
@@ -15,11 +16,17 @@ import dagger.Provides
 import io.reactivex.Observable
 
 @Module
-class TrendingModule(private val state: TrendingState? = null) {
+class TrendingModule(private val router: NavigationMiddleware.Router,
+                     private val state: TrendingState? = null) {
+
+    @PerActivity
+    @Provides
+    fun provideRouter() = router
 
     @PerActivity
     @Provides
     fun provideSubscribableStore(loadTrendingMiddleware: LoadTrendingMiddleware,
+                                 navigationMiddleware: NavigationMiddleware,
                                  loadActionReducer: LoadActionReducer):
             SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
         return SubscribableStore(
@@ -28,7 +35,8 @@ class TrendingModule(private val state: TrendingState? = null) {
                 ),
                 middleware = listOf(
                         LoggingMiddleware(),
-                        loadTrendingMiddleware
+                        loadTrendingMiddleware,
+                        navigationMiddleware
                 ),
                 initialState = state ?: TrendingState()
         )

@@ -7,10 +7,11 @@ import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.di.ApplicationComponent
 import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.di.TrendingModule
+import com.kostyrev.giphytrend.trending.middleware.NavigationMiddleware
 import com.kostyrev.redux.Store
 import javax.inject.Inject
 
-class TrendingActivity : BaseActivity() {
+class TrendingActivity : BaseActivity(), NavigationMiddleware.Router {
 
     @Inject
     lateinit var store: Store<@JvmWildcard TrendingState, @JvmWildcard TrendingAction>
@@ -20,7 +21,7 @@ class TrendingActivity : BaseActivity() {
     override fun injectSelf(applicationComponent: ApplicationComponent, savedInstanceState: Bundle?) {
         val state = savedInstanceState?.getParcelable<TrendingState>(KEY_STATE)
         applicationComponent
-                .trendingComponent(TrendingModule(state))
+                .trendingComponent(TrendingModule(this, state))
                 .inject(this)
     }
 
@@ -28,6 +29,10 @@ class TrendingActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.trending_activity)
         viewBinder.bind(TrendingView(findViewById<View>(android.R.id.content)))
+    }
+
+    override fun openGifScreen(id: String) {
+        // TODO
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
