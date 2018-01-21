@@ -4,7 +4,6 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
@@ -12,7 +11,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 
 class SubscribableStore<S : State, in A : Action>(private val reducers: List<Reducer<S, A>>,
                                                   private val middleware: List<Middleware<S, A>>,
-                                                  private val scheduler: Scheduler,
                                                   initialState: S) : Store<S, A> {
 
     private val state = BehaviorRelay.createDefault<S>(initialState)
@@ -21,7 +19,6 @@ class SubscribableStore<S : State, in A : Action>(private val reducers: List<Red
     fun subscribe(): Disposable {
         val disposable = CompositeDisposable()
         disposable += actions
-                .observeOn(scheduler)
                 .withLatestFrom(state) { action, state -> action to state }
                 .map {
                     val (action, latestState) = it
@@ -31,14 +28,13 @@ class SubscribableStore<S : State, in A : Action>(private val reducers: List<Red
 
         disposable += Observable.merge(
                 middleware.map {
-                    it.create(actions.observeOn(scheduler).hide(), state.hide())
+                    it.create(actions, state.hide())
                             .withLatestFrom(actions) { middlewareAction, latestAction ->
                                 middlewareAction to latestAction
                             }
                             .filter { it.first != it.second }
                             .map { it.first }
                 })
-                .observeOn(scheduler)
                 .subscribe(actions)
         return disposable
     }

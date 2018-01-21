@@ -20,8 +20,7 @@ class TrendingModule(private val state: TrendingState? = null) {
     @PerActivity
     @Provides
     fun provideSubscribableStore(loadTrendingMiddleware: LoadTrendingMiddleware,
-                                 loadActionReducer: LoadActionReducer,
-                                 schedulersFactory: SchedulersFactory):
+                                 loadActionReducer: LoadActionReducer):
             SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
         return SubscribableStore(
                 reducers = listOf(
@@ -31,7 +30,6 @@ class TrendingModule(private val state: TrendingState? = null) {
                         LoggingMiddleware(),
                         loadTrendingMiddleware
                 ),
-                scheduler = schedulersFactory.mainThread(),
                 initialState = state ?: TrendingState()
         )
     }

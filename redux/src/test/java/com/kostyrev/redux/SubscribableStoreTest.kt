@@ -109,7 +109,6 @@ internal class SubscribableStoreTest {
 
     @Test
     fun `action dispatched - calls reducers before middleware`() {
-        val scheduler = TestScheduler()
         val receivers = mutableListOf<String>()
         val store = createStore(
                 reducers = listOf(
@@ -123,12 +122,10 @@ internal class SubscribableStoreTest {
                                     .map { MiddlewareTestAction() }
                         },
                         middleware { action, _ -> action }
-                ),
-                scheduler = scheduler
+                )
         )
 
         store.dispatch(TestAction())
-        scheduler.triggerActions()
 
         assertEquals("reducer", receivers[0])
         assertEquals("middleware", receivers[1])
@@ -136,7 +133,6 @@ internal class SubscribableStoreTest {
 
     @Test
     fun `action dispatched - calls all middleware with dispatched action first`() {
-        val scheduler = TestScheduler()
         val actionsObserver = TestObserver<Action>()
         val store = createStore(
                 middleware = listOf(
@@ -146,16 +142,40 @@ internal class SubscribableStoreTest {
                                     .map { MiddlewareTestAction() }
                         },
                         middlewareWithActionObserver(actionsObserver)
-                ),
-                scheduler = scheduler
+                )
         )
 
         store.dispatch(TestAction())
-        scheduler.triggerActions()
 
         actionsObserver.assertValueCount(2)
         actionsObserver.assertValueAt(0) { it is TestAction }
         actionsObserver.assertValueAt(1) { it is MiddlewareTestAction }
+    }
+
+    @Test
+    fun `action dispatched - does not call reducers with same action from middleware`() {
+        val scheduler = TestScheduler()
+        val actions = mutableListOf<Action>()
+        val store = createStore(
+                reducers = listOf(
+                        reducer { state, action ->
+                            actions += action
+                            state
+                        }
+                ),
+                middleware = listOf(
+                        middleware { action, _ -> action },
+                        middleware { action, _ ->
+                            action
+                                    .filter { it is TestAction }
+                                    .map { MiddlewareTestAction() }
+                        }
+                )
+        )
+
+        store.dispatch(TestAction())
+
+        assertEquals(2, actions.size)
     }
 
 
@@ -169,7 +189,7 @@ internal class SubscribableStoreTest {
                             middleware: List<Middleware<TestState, Action>> = emptyList(),
                             scheduler: Scheduler = Schedulers.trampoline(),
                             state: TestState = TestState()) =
-            SubscribableStore(reducers, middleware, scheduler, state).also { it.subscribe() }
+            SubscribableStore(reducers, middleware, state).also { it.subscribe() }
 
     private fun reducer(reduceFunction: (TestState, Action) -> TestState) =
             object : Reducer<TestState, Action> {
