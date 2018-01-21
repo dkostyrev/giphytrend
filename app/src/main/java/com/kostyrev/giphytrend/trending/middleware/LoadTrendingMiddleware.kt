@@ -7,8 +7,8 @@ import com.kostyrev.giphytrend.trending.TrendingState
 import com.kostyrev.giphytrend.trending.action.LoadAction
 import com.kostyrev.giphytrend.trending.action.StartAction
 import com.kostyrev.giphytrend.trending.action.TrendingAction
-import com.kostyrev.giphytrend.trending.action.TrendingViewAction.EndOfListReached
-import com.kostyrev.giphytrend.trending.action.TrendingViewAction.PullToRefreshStarted
+import com.kostyrev.giphytrend.trending.action.TrendingViewAction.Append
+import com.kostyrev.giphytrend.trending.action.TrendingViewAction.PullToRefresh
 import com.kostyrev.redux.Middleware
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -27,10 +27,10 @@ class LoadTrendingMiddleware @Inject constructor(private val interactor: Trendin
                         action is StartAction && state.isEmpty() -> {
                             loadData(pagination = null, startWith = LoadAction.Loading())
                         }
-                        action is PullToRefreshStarted && state.canRefresh() -> {
+                        action is PullToRefresh && state.canRefresh() -> {
                             loadData(pagination = null, startWith = LoadAction.Refreshing())
                         }
-                        action is EndOfListReached && state.canLoadNextPage() -> {
+                        action is Append && state.canLoadNextPage() -> {
                             loadData(state.pagination, startWith = LoadAction.Appending())
                         }
                         else -> Observable.empty()
@@ -43,7 +43,7 @@ class LoadTrendingMiddleware @Inject constructor(private val interactor: Trendin
     }
 
     private fun TrendingState.canRefresh(): Boolean {
-        return !loading
+        return !refreshing && !loading
     }
 
     private fun loadData(pagination: Pagination? = null, startWith: LoadAction): Observable<TrendingAction> {

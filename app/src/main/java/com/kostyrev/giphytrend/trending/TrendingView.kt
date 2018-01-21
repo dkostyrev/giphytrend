@@ -42,8 +42,8 @@ class TrendingView(view: View) {
 
     val actions: Observable<TrendingViewAction>
         get() = Observable.merge(listOf(
-                swipeRefresh.refreshes.map { TrendingViewAction.PullToRefreshStarted() },
-                adapter.appends.map { TrendingViewAction.EndOfListReached() },
+                swipeRefresh.refreshes.map { TrendingViewAction.PullToRefresh() },
+                adapter.appends.map { TrendingViewAction.Append() },
                 clickRelay.map { TrendingViewAction.ListItemClicked(it) }
         ))
 

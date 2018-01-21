@@ -55,8 +55,10 @@ dependencies {
 
     testImplementation(
             deps.junit,
+            deps.junitParams,
             deps.mockito,
-            deps.mockitoKotlin
+            deps.mockitoKotlin,
+            deps.hamcrest
     )
 
     androidTestImplementation(
