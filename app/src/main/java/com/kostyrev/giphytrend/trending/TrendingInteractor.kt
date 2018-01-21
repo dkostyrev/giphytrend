@@ -14,7 +14,7 @@ class TrendingInteractor @Inject constructor(private val api: GiphyApi,
                                              private val schedulers: SchedulersFactory) {
 
     fun loadTrending(pagination: Pagination?): Observable<PagedResponse<List<Gif>>> {
-        return api.getTrending(pagination?.offset)
+        return api.getTrending(pagination?.let { it.offset + it.count })
                 .subscribeOn(schedulers.io())
 
     }

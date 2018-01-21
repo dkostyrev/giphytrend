@@ -9,6 +9,7 @@ data class TrendingState(val loading: Boolean = false,
                          val refreshing: Boolean = false,
                          val appending: Boolean = false,
                          val error: Boolean = false,
+                         val canAppend: Boolean = true,
                          val items: List<GifItem> = emptyList(),
                          val gifs: List<Gif> = emptyList(),
                          val pagination: Pagination? = null) : State

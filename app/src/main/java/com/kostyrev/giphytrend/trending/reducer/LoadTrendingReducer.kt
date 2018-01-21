@@ -26,6 +26,11 @@ class LoadTrendingReducer @Inject constructor() : Reducer<TrendingState, Trendin
             }
             is LoadAction.Error -> state.notLoading().copy(error = true)
             is LoadAction.Loaded -> with(action.result) {
+                val state = if (!state.appending) {
+                    state.copy(gifs = emptyList(), items = emptyList())
+                } else {
+                    state
+                }
                 state.notLoading().copy(
                         error = false,
                         gifs = state.gifs + data,
