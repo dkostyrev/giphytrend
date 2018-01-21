@@ -10,4 +10,6 @@ sealed class TrendingViewAction : TrendingAction {
 
     class Append : TrendingViewAction()
 
+    class Retry : TrendingViewAction()
+
 }

@@ -1,5 +1,6 @@
 package com.kostyrev.giphytrend.trending
 
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
@@ -14,38 +15,62 @@ import com.kostyrev.giphytrend.util.refreshes
 import com.kostyrev.giphytrend.util.setVisible
 import io.reactivex.Observable
 
-class TrendingView(view: View) {
+class TrendingView(private val view: View) {
 
     private val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
     private val recycler: RecyclerView = view.findViewById(R.id.recycler_view)
     private val progress: View = view.findViewById(R.id.progress_bar)
     private val clickRelay: PublishRelay<ListItem> = PublishRelay.create()
+    private val retryActions: PublishRelay<Unit> = PublishRelay.create()
     private val adapter: GifAdapter = GifAdapter(emptyList(), clickRelay)
+    private var snackbar: Snackbar? = null
 
     init {
         val screenWidth = view.resources.displayMetrics.widthPixels
-        val gifWidth = view.resources.getInteger(R.integer.gif_fixed_width)
+        val gifWidth = view.resources.getDimensionPixelSize(R.dimen.gif_width)//view.resources.getInteger(R.integer.gif_fixed_width)
         val spanCount = screenWidth / gifWidth
         recycler.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
+        adapter.setHasStableIds(true)
     }
 
     fun render(state: TrendingState) {
-        swipeRefresh.setVisible(!state.loading)
-        progress.setVisible(state.loading)
-        swipeRefresh.isRefreshing = state.refreshing
+        swipeRefresh.setVisible(!state.isLoading())
+        progress.setVisible(state.isLoading())
+        swipeRefresh.isRefreshing = state.isRefreshing()
+        swipeRefresh.isEnabled = !state.hasError()
         if (recycler.adapter == null) {
             recycler.adapter = adapter
         }
         adapter.canAppend = state.canAppend
         adapter.data = state.items
+        if (state.error != null) {
+            if (snackbar == null) {
+                snackbar = Snackbar.make(view, state.error, Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Retry") {
+                            snackbar = null
+                            retryActions.accept(Unit)
+                        }
+                snackbar?.show()
+            }
+        } else {
+            snackbar?.dismiss()
+            snackbar = null
+        }
     }
 
     val actions: Observable<TrendingViewAction>
         get() = Observable.merge(listOf(
                 swipeRefresh.refreshes.map { TrendingViewAction.PullToRefresh() },
                 adapter.appends.map { TrendingViewAction.Append() },
-                clickRelay.map { TrendingViewAction.ListItemClicked(it) }
+                clickRelay.map { TrendingViewAction.ListItemClicked(it) },
+                retryActions.map { TrendingViewAction.Retry() }
         ))
+
+    private fun TrendingState.isLoading() = loadState is TrendingState.LoadState.Loading && !hasError()
+
+    private fun TrendingState.isRefreshing() = loadState is TrendingState.LoadState.Refreshing && !hasError()
+
+    private fun TrendingState.hasError() = !error.isNullOrEmpty()
 
     private val AppendingAdapter<*, *>.appends: Observable<Unit>
         get() {

@@ -9,6 +9,7 @@ import com.kostyrev.giphytrend.api.model.PagedResponse
 import com.kostyrev.giphytrend.api.model.Pagination
 import com.kostyrev.giphytrend.trending.TrendingInteractor
 import com.kostyrev.giphytrend.trending.TrendingState
+import com.kostyrev.giphytrend.trending.TrendingState.LoadState.*
 import com.kostyrev.giphytrend.trending.action.LoadAction
 import com.kostyrev.giphytrend.trending.action.StartAction
 import com.kostyrev.giphytrend.trending.action.TrendingAction
@@ -41,21 +42,21 @@ internal class LoadTrendingMiddlewareTest {
     }
 
     @Test
-    fun `pull to refresh received - loads trending with interactor without pagination - state is not loading`() {
+    fun `pull to refresh received - loads trending with interactor without pagination - load state is null`() {
         create()
 
-        state.accept(TrendingState(loading = false))
+        state.accept(TrendingState(loadState = null))
         actions.accept(TrendingViewAction.PullToRefresh())
 
         verify(interactor).loadTrending(pagination = null)
     }
 
     @Test
-    fun `append received - loads trending with interactor with pagination - state is not loading`() {
+    fun `append received - loads trending with interactor with pagination - load state is null`() {
         val pagination: Pagination = mock()
         create()
 
-        state.accept(TrendingState(loading = false, pagination = pagination))
+        state.accept(TrendingState(loadState = null, pagination = pagination))
         actions.accept(TrendingViewAction.Append())
 
         verify(interactor).loadTrending(pagination)
@@ -74,9 +75,9 @@ internal class LoadTrendingMiddlewareTest {
 
     @Suppress("unused")
     private fun positiveCases() = arrayOf(
-            PositiveCase(StartAction(), TrendingState(), LoadAction.Loading()),
-            PositiveCase(TrendingViewAction.PullToRefresh(), TrendingState(refreshing = false), LoadAction.Refreshing()),
-            PositiveCase(TrendingViewAction.Append(), TrendingState(appending = false, loading = false), LoadAction.Appending())
+            PositiveCase(StartAction(), TrendingState(loadState = null), LoadAction.Loading()),
+            PositiveCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = null), LoadAction.Refreshing()),
+            PositiveCase(TrendingViewAction.Append(), TrendingState(loadState = null), LoadAction.Appending())
     )
 
     @Test
@@ -123,9 +124,12 @@ internal class LoadTrendingMiddlewareTest {
     @Suppress("unused")
     private fun negativeCases() = arrayOf(
             NegativeCase(StartAction(), TrendingState(gifs = listOf(mock()))),
-            NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(refreshing = true)),
-            NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(loading = true)),
-            NegativeCase(TrendingViewAction.Append(), TrendingState(appending = true))
+            NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = Refreshing())),
+            NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = Loading())),
+            NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = Appending())),
+            NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Refreshing())),
+            NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Loading())),
+            NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Appending()))
     )
 
     @Test

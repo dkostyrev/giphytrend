@@ -4,6 +4,7 @@ package com.kostyrev.giphytrend.trending.reducer
 
 import com.kostyrev.giphytrend.api.model.*
 import com.kostyrev.giphytrend.trending.TrendingState
+import com.kostyrev.giphytrend.trending.TrendingState.LoadState.*
 import com.kostyrev.giphytrend.trending.action.LoadAction
 import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.list.GifItem
@@ -28,72 +29,52 @@ internal class LoadActionReducerTest {
     private fun cases() = arrayOf(
             Case(
                     state = TrendingState(
-                            refreshing = false,
-                            appending = true,
-                            loading = true
+                            loadState = null
                     ),
                     action = LoadAction.Refreshing(),
                     expectedState = TrendingState(
-                            refreshing = true,
-                            appending = false,
-                            loading = false
+                            loadState = Refreshing()
                     )
             ),
             Case(
                     state = TrendingState(
-                            appending = false,
-                            refreshing = true,
-                            loading = true
+                            loadState = null
                     ),
                     action = LoadAction.Appending(),
                     expectedState = TrendingState(
-                            appending = true,
-                            refreshing = false,
-                            loading = false
+                            loadState = Appending()
                     )
             ),
             Case(
                     state = TrendingState(
-                            loading = false,
-                            appending = true,
-                            refreshing = true
+                            loadState = null
                     ),
                     action = LoadAction.Loading(),
                     expectedState = TrendingState(
-                            loading = true,
-                            appending = false,
-                            refreshing = false
+                            loadState = Loading()
                     )
             ),
             Case(
                     state = TrendingState(
-                            loading = true,
-                            appending = true,
-                            refreshing = true,
-                            error = false
+                            loadState = Loading(),
+                            error = null
                     ),
-                    action = LoadAction.Error(""),
+                    action = LoadAction.Error("Error"),
                     expectedState = TrendingState(
-                            error = true,
-                            loading = false,
-                            appending = false,
-                            refreshing = false
+                            error = "Error",
+                            loadState = Loading()
                     )
             ),
             createResponse().let {
                 Case(
                         state = TrendingState(
-                                loading = true,
-                                appending = true,
-                                refreshing = true,
-                                error = true
+                                loadState = Appending(),
+                                error = "Error"
                         ),
                         action = LoadAction.Loaded(it),
                         expectedState = TrendingState(
-                                loading = false,
-                                appending = false,
-                                refreshing = false,
-                                error = false,
+                                loadState = null,
+                                error = null,
                                 pagination = it.pagination
                         )
                 )
@@ -127,7 +108,7 @@ internal class LoadActionReducerTest {
         val loadedGif = createGif()
         val action = LoadAction.Loaded(createResponse(listOf(loadedGif)))
         val state = reducer.reduce(TrendingState(
-                appending = true,
+                loadState = Appending(),
                 gifs = listOf(originalGif)
         ), action)
 
@@ -138,7 +119,7 @@ internal class LoadActionReducerTest {
     fun `reduce - adds new items to state - state was appending`() {
         val action = LoadAction.Loaded(createResponse(listOf(createGif(id = "2"))))
         val state = reducer.reduce(TrendingState(
-                appending = true,
+                loadState = Appending(),
                 items = listOf(createItem(id = "1"))
         ), action)
 
@@ -151,7 +132,7 @@ internal class LoadActionReducerTest {
         val loadedGif = createGif()
         val action = LoadAction.Loaded(createResponse(listOf(loadedGif)))
         val state = reducer.reduce(TrendingState(
-                appending = false,
+                loadState = Refreshing(),
                 items = listOf(createItem(), createItem()),
                 gifs = listOf(createGif(), createGif())
         ), action)

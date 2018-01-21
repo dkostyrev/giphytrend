@@ -39,6 +39,13 @@ abstract class AppendingAdapter<V : ListItemView<I>, I : ListItem>(data: List<I>
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        if (isAppendingPosition(position)) {
+            return RecyclerView.NO_ID
+        }
+        return super.getItemId(position)
+    }
+
     private fun isAppendingPosition(position: Int) = position == itemCount - 1 && canAppend
 
     override fun getItemCount(): Int {

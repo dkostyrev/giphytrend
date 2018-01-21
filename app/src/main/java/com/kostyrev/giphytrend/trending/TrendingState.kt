@@ -10,11 +10,35 @@ import kotlinx.android.parcel.Parcelize
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-data class TrendingState(val loading: Boolean = false,
-                         val refreshing: Boolean = false,
-                         val appending: Boolean = false,
-                         val error: Boolean = false,
-                         val canAppend: Boolean = true,
+data class TrendingState(val loadState: LoadState? = null,
+                         val error: String? = null,
+                         val canAppend: Boolean = false,
                          val items: List<GifItem> = emptyList(),
                          val gifs: List<Gif> = emptyList(),
-                         val pagination: Pagination? = null) : State, Parcelable
+                         val pagination: Pagination? = null) : State, Parcelable {
+
+    sealed class LoadState : Parcelable {
+
+        @Parcelize
+        class Loading : LoadState()
+
+        @Parcelize
+        class Appending : LoadState()
+
+        @Parcelize
+        class Refreshing : LoadState()
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return javaClass.hashCode()
+        }
+
+
+    }
+
+}
