@@ -1,6 +1,5 @@
 package com.kostyrev.giphytrend.trending.di
 
-import android.util.Log
 import com.kostyrev.giphytrend.di.PerActivity
 import com.kostyrev.giphytrend.redux.ViewBinder
 import com.kostyrev.giphytrend.trending.TrendingState
@@ -9,13 +8,12 @@ import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.middleware.LoadTrendingMiddleware
 import com.kostyrev.giphytrend.trending.middleware.NavigationMiddleware
 import com.kostyrev.giphytrend.trending.reducer.LoadActionReducer
+import com.kostyrev.giphytrend.util.LoggingMiddleware
 import com.kostyrev.giphytrend.util.SchedulersFactory
-import com.kostyrev.redux.Middleware
 import com.kostyrev.redux.Store
 import com.kostyrev.redux.SubscribableStore
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 
 @Module
 class TrendingModule(private val router: NavigationMiddleware.Router,
@@ -58,11 +56,4 @@ class TrendingModule(private val router: NavigationMiddleware.Router,
         return ViewBinder(store, schedulers, startAction = StartAction())
     }
 
-    private class LoggingMiddleware : Middleware<TrendingState, TrendingAction> {
-        override fun create(actions: Observable<TrendingAction>, state: Observable<TrendingState>): Observable<TrendingAction> {
-            return actions.doOnNext {
-                Log.i("Giphy", "${Thread.currentThread().name} Dispatching $it")
-            }
-        }
-    }
 }
