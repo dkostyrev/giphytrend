@@ -8,6 +8,7 @@ import com.kostyrev.giphytrend.trending.middleware.LoadTrendingMiddleware
 import com.kostyrev.giphytrend.trending.reducer.LoadTrendingReducer
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Middleware
+import com.kostyrev.redux.Store
 import com.kostyrev.redux.SubscribableStore
 import dagger.Module
 import dagger.Provides
@@ -18,9 +19,10 @@ class TrendingModule(private val state: TrendingState? = null) {
 
     @PerActivity
     @Provides
-    fun provideStore(loadTrendingMiddleware: LoadTrendingMiddleware,
-                     loadTrendingReducer: LoadTrendingReducer,
-                     schedulersFactory: SchedulersFactory): SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
+    fun provideSubscribableStore(loadTrendingMiddleware: LoadTrendingMiddleware,
+                                 loadTrendingReducer: LoadTrendingReducer,
+                                 schedulersFactory: SchedulersFactory):
+            SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
         return SubscribableStore(
                 reducers = listOf(
                         loadTrendingReducer
@@ -32,6 +34,13 @@ class TrendingModule(private val state: TrendingState? = null) {
                 scheduler = schedulersFactory.mainThread(),
                 initialState = state ?: TrendingState()
         )
+    }
+
+    @PerActivity
+    @Provides
+    fun provideStore(store: SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction>):
+            Store<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
+        return store
     }
 
 
