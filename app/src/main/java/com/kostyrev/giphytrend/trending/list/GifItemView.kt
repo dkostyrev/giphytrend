@@ -8,10 +8,13 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.api.model.Image
+import com.kostyrev.giphytrend.list.ListItem
 import com.kostyrev.giphytrend.list.ListItemView
 import com.kostyrev.giphytrend.util.CircleProgressBarDrawable
+import io.reactivex.functions.Consumer
 
-class GifItemView(view: View) : ListItemView<GifItem>, RecyclerView.ViewHolder(view) {
+class GifItemView(view: View,
+                  private val clickConsumer: Consumer<ListItem>) : ListItemView<GifItem>, RecyclerView.ViewHolder(view) {
 
     private val draweeView: SimpleDraweeView = view.findViewById(R.id.drawee_view)
 
@@ -24,6 +27,7 @@ class GifItemView(view: View) : ListItemView<GifItem>, RecyclerView.ViewHolder(v
     }
 
     override fun render(item: GifItem) = with(item) {
+        itemView.setOnClickListener { clickConsumer.accept(item) }
         val previousImage = draweeView.getTag(R.id.gif_item_view_image) as? Image
         if (image.webp != previousImage?.webp) {
             with(draweeView.layoutParams as RelativeLayout.LayoutParams) {

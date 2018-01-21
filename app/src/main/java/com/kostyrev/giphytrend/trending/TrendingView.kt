@@ -4,8 +4,10 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
+import com.jakewharton.rxrelay2.PublishRelay
 import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.list.AppendingAdapter
+import com.kostyrev.giphytrend.list.ListItem
 import com.kostyrev.giphytrend.trending.action.TrendingViewAction
 import com.kostyrev.giphytrend.trending.list.GifAdapter
 import com.kostyrev.giphytrend.util.refreshes
@@ -17,7 +19,8 @@ class TrendingView(view: View) {
     private val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
     private val recycler: RecyclerView = view.findViewById(R.id.recycler_view)
     private val progress: View = view.findViewById(R.id.progress_bar)
-    private val adapter: GifAdapter = GifAdapter(emptyList())
+    private val clickRelay: PublishRelay<ListItem> = PublishRelay.create()
+    private val adapter: GifAdapter = GifAdapter(emptyList(), clickRelay)
 
     init {
         val screenWidth = view.resources.displayMetrics.widthPixels
@@ -40,7 +43,8 @@ class TrendingView(view: View) {
     val actions: Observable<TrendingViewAction>
         get() = Observable.merge(listOf(
                 swipeRefresh.refreshes.map { TrendingViewAction.PullToRefreshStarted() },
-                adapter.appends.map { TrendingViewAction.EndOfListReached() }
+                adapter.appends.map { TrendingViewAction.EndOfListReached() },
+                clickRelay.map { TrendingViewAction.ListItemClicked(it) }
         ))
 
     private val AppendingAdapter<*, *>.appends: Observable<Unit>

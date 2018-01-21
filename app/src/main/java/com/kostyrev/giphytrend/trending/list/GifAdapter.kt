@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.list.AppendingAdapter
+import com.kostyrev.giphytrend.list.ListItem
+import io.reactivex.functions.Consumer
 
-class GifAdapter(data: List<GifItem>) : AppendingAdapter<GifItemView, GifItem>(data) {
+class GifAdapter(data: List<GifItem>,
+                 private val clickConsumer: Consumer<ListItem>) : AppendingAdapter<GifItemView, GifItem>(data) {
 
     override fun createAppendingViewHolder(inflater: LayoutInflater, parent: ViewGroup): RecyclerView.ViewHolder {
         return AppendingViewHolder(inflater.inflate(R.layout.appending_item, parent, false))
     }
 
     override fun createViewHolder(inflater: LayoutInflater, parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return GifItemView(inflater.inflate(R.layout.gif_item, parent, false))
+        return GifItemView(inflater.inflate(R.layout.gif_item, parent, false), clickConsumer)
     }
 
     private class AppendingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
