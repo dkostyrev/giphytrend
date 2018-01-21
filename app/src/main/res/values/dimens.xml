@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<integer name="gif_fixed_width">200</integer>
+	<dimen name="gif_width">160dp</dimen>
 </resources>

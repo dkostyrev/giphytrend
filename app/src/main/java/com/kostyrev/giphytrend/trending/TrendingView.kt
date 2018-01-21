@@ -27,7 +27,7 @@ class TrendingView(private val view: View) {
 
     init {
         val screenWidth = view.resources.displayMetrics.widthPixels
-        val gifWidth = view.resources.getDimensionPixelSize(R.dimen.gif_width)//view.resources.getInteger(R.integer.gif_fixed_width)
+        val gifWidth = view.resources.getDimensionPixelSize(R.dimen.gif_width)
         val spanCount = screenWidth / gifWidth
         recycler.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
         adapter.setHasStableIds(true)

@@ -31,8 +31,8 @@ class GifItemView(view: View,
         val previousImage = draweeView.getTag(R.id.gif_item_view_image) as? Image
         if (image.webp != previousImage?.webp) {
             with(draweeView.layoutParams as RelativeLayout.LayoutParams) {
-                width = image.width
-                height = image.height
+                val aspectRatio = (image.width / image.height).toFloat()
+                height = Math.round(draweeView.resources.getDimensionPixelSize(R.dimen.gif_width) / aspectRatio)
                 draweeView.layoutParams = this
             }
             draweeView.controller = Fresco.newDraweeControllerBuilder()
