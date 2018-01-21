@@ -23,7 +23,7 @@ class LoadDetailsMiddleware @Inject constructor(private val interactor: DetailsI
                     val (action, state) = it
                     isStartAction(action, state) || isRetryAction(action, state)
                 }.flatMap {
-                    interactor.getGif()
+                    interactor.loadGif()
                             .map { LoadAction.Loaded(it.data) }
                             .cast<DetailsAction>()
                             .startWith(LoadAction.Loading())

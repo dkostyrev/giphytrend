@@ -10,7 +10,7 @@ class DetailsInteractor constructor(private val id: String,
                                     private val api: GiphyApi,
                                     private val schedulers: SchedulersFactory) {
 
-    fun getGif(): Observable<Response<Gif>> {
+    fun loadGif(): Observable<Response<Gif>> {
         return api.getGif(id)
                 .subscribeOn(schedulers.io())
     }
