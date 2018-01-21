@@ -8,4 +8,4 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 class Images(@SerializedName("fixed_width") val fixedWidth: Image,
-             @SerializedName("downsized_medium") val downsized: Image) : Parcelable
+             @SerializedName("original") val original: Image) : Parcelable

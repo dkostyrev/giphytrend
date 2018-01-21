@@ -154,7 +154,7 @@ internal class LoadActionReducerTest {
         return Gif(
                 id = id,
                 title = "title",
-                images = Images(fixedWidth = image, downsized = createImage()),
+                images = Images(fixedWidth = image, original = createImage()),
                 user = null
         )
     }

@@ -11,6 +11,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DetailsState(val loading: Boolean = false,
                         val error: String? = null,
-                        val title: String? = null,
                         val image: Image? = null,
                         val user: User? = null) : State, Parcelable
