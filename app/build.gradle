@@ -30,14 +30,16 @@ dependencies {
             deps.recyclerview,
             deps.design,
             deps.fresco,
+            deps.frescoWebp,
+            deps.frescoAnimatedWebp,
             deps.rxJava,
             deps.rxKotlin,
             deps.rxAndroid,
             deps.rxRelay,
             deps.dagger,
             deps.retrofit,
-            deps.retrofit_gson,
-            deps.retrofit_rxjava,
+            deps.retrofitGson,
+            deps.retrofitRxJava,
             deps.okhttp,
             deps.gson
     )

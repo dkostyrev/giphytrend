@@ -20,7 +20,10 @@ class TrendingView(view: View) {
     private val adapter: GifAdapter = GifAdapter(emptyList())
 
     init {
-        recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val screenWidth = view.resources.displayMetrics.widthPixels
+        val gifWidth = view.resources.getInteger(R.integer.gif_fixed_width)
+        val spanCount = screenWidth / gifWidth
+        recycler.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
     }
 
     fun render(state: TrendingState) {

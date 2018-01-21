@@ -43,7 +43,7 @@ class LoadTrendingReducer @Inject constructor() : Reducer<TrendingState, Trendin
     }
 
     private fun List<Gif>.toItems() = map {
-        GifItem(it.id, it.images.fixedWidth.url)
+        GifItem(it.id, it.images.fixedWidth)
     }
 
     private fun TrendingState.notLoading() = copy(
