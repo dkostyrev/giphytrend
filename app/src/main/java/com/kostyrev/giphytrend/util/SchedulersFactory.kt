@@ -5,10 +5,10 @@ import io.reactivex.schedulers.Schedulers
 
 open class SchedulersFactory {
 
-    fun io() = Schedulers.io()
+    open fun io() = Schedulers.io()
 
-    fun computation() = Schedulers.computation()
+    open fun computation() = Schedulers.computation()
 
-    fun mainThread() = AndroidSchedulers.mainThread()
+    open fun mainThread() = AndroidSchedulers.mainThread()
 
 }
