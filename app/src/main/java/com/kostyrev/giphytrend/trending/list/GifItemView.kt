@@ -11,6 +11,7 @@ import com.kostyrev.giphytrend.api.model.Image
 import com.kostyrev.giphytrend.list.ListItem
 import com.kostyrev.giphytrend.list.ListItemView
 import com.kostyrev.giphytrend.util.CircleProgressBarDrawable
+import com.kostyrev.giphytrend.util.setProgressBar
 import io.reactivex.functions.Consumer
 
 class GifItemView(view: View,
@@ -19,11 +20,7 @@ class GifItemView(view: View,
     private val draweeView: SimpleDraweeView = view.findViewById(R.id.drawee_view)
 
     init {
-        val resources = view.resources
-        val progressDrawable = CircleProgressBarDrawable(resources)
-        progressDrawable.color = ResourcesCompat.getColor(resources, R.color.progress, null)
-        progressDrawable.backgroundColor = ResourcesCompat.getColor(resources, R.color.progress_background, null)
-        draweeView.hierarchy.setProgressBarImage(progressDrawable)
+        draweeView.setProgressBar()
     }
 
     override fun render(item: GifItem) = with(item) {
@@ -31,7 +28,7 @@ class GifItemView(view: View,
         val previousImage = draweeView.getTag(R.id.gif_item_view_image) as? Image
         if (image.webp != previousImage?.webp) {
             with(draweeView.layoutParams as RelativeLayout.LayoutParams) {
-                val aspectRatio = (image.width / image.height).toFloat()
+                val aspectRatio = image.width.toFloat() / image.height.toFloat()
                 height = Math.round(draweeView.resources.getDimensionPixelSize(R.dimen.gif_width) / aspectRatio)
                 draweeView.layoutParams = this
             }

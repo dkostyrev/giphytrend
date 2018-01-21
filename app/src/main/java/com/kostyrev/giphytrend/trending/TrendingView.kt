@@ -17,7 +17,7 @@ import com.kostyrev.giphytrend.util.refreshes
 import com.kostyrev.giphytrend.util.setVisible
 import io.reactivex.Observable
 
-class TrendingView(private val view: View): BoundableView<TrendingState, TrendingAction> {
+class TrendingView(private val view: View) : BoundableView<TrendingState, TrendingAction> {
 
     private val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
     private val recycler: RecyclerView = view.findViewById(R.id.recycler_view)
@@ -48,7 +48,7 @@ class TrendingView(private val view: View): BoundableView<TrendingState, Trendin
         if (state.error != null) {
             if (snackbar == null) {
                 snackbar = Snackbar.make(view, state.error, Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Retry") {
+                        .setAction(R.string.retry) {
                             snackbar = null
                             retryActions.accept(Unit)
                         }
