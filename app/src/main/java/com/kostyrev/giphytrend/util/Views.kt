@@ -2,6 +2,7 @@ package com.kostyrev.giphytrend.util
 
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
+import android.widget.TextView
 import io.reactivex.Observable
 
 fun View.setVisible(visible: Boolean) {
@@ -27,6 +28,27 @@ val View.definedHeight: Int
             return measuredHeight
         } else {
             return Math.max(layoutParams?.height ?: 0, 0)
+        }
+    }
+
+fun TextView.bindText(text: String?) {
+    this.text = text
+    if (text.isNullOrEmpty()) {
+        setVisible(false)
+    } else {
+        setVisible(true)
+    }
+}
+
+val View.clicks: Observable<Unit>
+    get() {
+        return Observable.create { emitter ->
+            emitter.setCancellable {
+                setOnClickListener(null)
+            }
+            setOnClickListener {
+                emitter.onNext(Unit)
+            }
         }
     }
 
