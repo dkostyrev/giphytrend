@@ -5,7 +5,7 @@ import com.kostyrev.giphytrend.di.PerActivity
 import com.kostyrev.giphytrend.trending.TrendingState
 import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.middleware.LoadTrendingMiddleware
-import com.kostyrev.giphytrend.trending.reducer.LoadTrendingReducer
+import com.kostyrev.giphytrend.trending.reducer.LoadActionReducer
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Middleware
 import com.kostyrev.redux.Store
@@ -20,16 +20,16 @@ class TrendingModule(private val state: TrendingState? = null) {
     @PerActivity
     @Provides
     fun provideSubscribableStore(loadTrendingMiddleware: LoadTrendingMiddleware,
-                                 loadTrendingReducer: LoadTrendingReducer,
+                                 loadActionReducer: LoadActionReducer,
                                  schedulersFactory: SchedulersFactory):
             SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
         return SubscribableStore(
                 reducers = listOf(
-                        loadTrendingReducer
+                        loadActionReducer
                 ),
                 middleware = listOf(
-                        loadTrendingMiddleware,
-                        LoggingMiddleware()
+                        LoggingMiddleware(),
+                        loadTrendingMiddleware
                 ),
                 scheduler = schedulersFactory.mainThread(),
                 initialState = state ?: TrendingState()
@@ -47,7 +47,7 @@ class TrendingModule(private val state: TrendingState? = null) {
     private class LoggingMiddleware : Middleware<TrendingState, TrendingAction> {
         override fun create(actions: Observable<TrendingAction>, state: Observable<TrendingState>): Observable<TrendingAction> {
             return actions.doOnNext {
-                Log.i("Giphy", "Dispatching $it")
+                Log.i("Giphy", "${Thread.currentThread().name} Dispatching $it")
             }
         }
     }

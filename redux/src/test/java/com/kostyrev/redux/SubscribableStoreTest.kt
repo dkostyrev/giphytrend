@@ -1,11 +1,12 @@
 package com.kostyrev.redux
 
-import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.stubbing.Answer
 
 internal class SubscribableStoreTest {
 
@@ -106,6 +107,58 @@ internal class SubscribableStoreTest {
         }
     }
 
+    @Test
+    fun `action dispatched - calls reducers before middleware`() {
+        val scheduler = TestScheduler()
+        val receivers = mutableListOf<String>()
+        val store = createStore(
+                reducers = listOf(
+                        reducer { state, _ -> receivers += "reducer"; state }
+                ),
+                middleware = listOf(
+                        middleware { action, _ ->
+                            action
+                                    .doOnNext { receivers += "middleware" }
+                                    .filter { it is TestAction }
+                                    .map { MiddlewareTestAction() }
+                        },
+                        middleware { action, _ -> action }
+                ),
+                scheduler = scheduler
+        )
+
+        store.dispatch(TestAction())
+        scheduler.triggerActions()
+
+        assertEquals("reducer", receivers[0])
+        assertEquals("middleware", receivers[1])
+    }
+
+    @Test
+    fun `action dispatched - calls all middleware with dispatched action first`() {
+        val scheduler = TestScheduler()
+        val actionsObserver = TestObserver<Action>()
+        val store = createStore(
+                middleware = listOf(
+                        middleware { action, _ ->
+                            action
+                                    .filter { it is TestAction }
+                                    .map { MiddlewareTestAction() }
+                        },
+                        middlewareWithActionObserver(actionsObserver)
+                ),
+                scheduler = scheduler
+        )
+
+        store.dispatch(TestAction())
+        scheduler.triggerActions()
+
+        actionsObserver.assertValueCount(2)
+        actionsObserver.assertValueAt(0) { it is TestAction }
+        actionsObserver.assertValueAt(1) { it is MiddlewareTestAction }
+    }
+
+
     private class MiddlewareTestAction : Action
 
     private class TestAction : Action
@@ -114,8 +167,9 @@ internal class SubscribableStoreTest {
 
     private fun createStore(reducers: List<Reducer<TestState, Action>> = emptyList(),
                             middleware: List<Middleware<TestState, Action>> = emptyList(),
+                            scheduler: Scheduler = Schedulers.trampoline(),
                             state: TestState = TestState()) =
-            SubscribableStore(reducers, middleware, Schedulers.trampoline(), state).also { it.subscribe() }
+            SubscribableStore(reducers, middleware, scheduler, state).also { it.subscribe() }
 
     private fun reducer(reduceFunction: (TestState, Action) -> TestState) =
             object : Reducer<TestState, Action> {

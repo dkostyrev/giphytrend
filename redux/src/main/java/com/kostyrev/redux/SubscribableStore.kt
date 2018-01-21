@@ -29,12 +29,15 @@ class SubscribableStore<S : State, in A : Action>(private val reducers: List<Red
                 }
                 .subscribe(state)
 
-        disposable += Observable.merge(middleware.map { it.create(actions.hide(), state.hide()) })
-                .withLatestFrom(actions) { middlewareAction, latestAction ->
-                    middlewareAction to latestAction
-                }
-                .filter { it.first != it.second }
-                .map { it.first }
+        disposable += Observable.merge(
+                middleware.map {
+                    it.create(actions.observeOn(scheduler).hide(), state.hide())
+                            .withLatestFrom(actions) { middlewareAction, latestAction ->
+                                middlewareAction to latestAction
+                            }
+                            .filter { it.first != it.second }
+                            .map { it.first }
+                })
                 .observeOn(scheduler)
                 .subscribe(actions)
         return disposable
@@ -47,7 +50,6 @@ class SubscribableStore<S : State, in A : Action>(private val reducers: List<Red
     override fun stateChanges(): Observable<S> {
         return state
                 .distinctUntilChanged()
-                .observeOn(scheduler)
                 .hide()
     }
 
