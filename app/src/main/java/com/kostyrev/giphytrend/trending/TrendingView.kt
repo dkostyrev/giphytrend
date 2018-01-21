@@ -9,13 +9,15 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.list.AppendingAdapter
 import com.kostyrev.giphytrend.list.ListItem
+import com.kostyrev.giphytrend.redux.BoundableView
+import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.action.TrendingViewAction
 import com.kostyrev.giphytrend.trending.list.GifAdapter
 import com.kostyrev.giphytrend.util.refreshes
 import com.kostyrev.giphytrend.util.setVisible
 import io.reactivex.Observable
 
-class TrendingView(private val view: View) {
+class TrendingView(private val view: View): BoundableView<TrendingState, TrendingAction> {
 
     private val swipeRefresh: SwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout)
     private val recycler: RecyclerView = view.findViewById(R.id.recycler_view)
@@ -33,7 +35,7 @@ class TrendingView(private val view: View) {
         adapter.setHasStableIds(true)
     }
 
-    fun render(state: TrendingState) {
+    override fun render(state: TrendingState) {
         swipeRefresh.setVisible(!state.isLoading())
         progress.setVisible(state.isLoading())
         swipeRefresh.isRefreshing = state.isRefreshing()
@@ -58,7 +60,7 @@ class TrendingView(private val view: View) {
         }
     }
 
-    val actions: Observable<TrendingViewAction>
+    override val actions: Observable<TrendingAction>
         get() = Observable.merge(listOf(
                 swipeRefresh.refreshes.map { TrendingViewAction.PullToRefresh() },
                 adapter.appends.map { TrendingViewAction.Append() },

@@ -1,23 +1,20 @@
-package com.kostyrev.giphytrend.trending
+package com.kostyrev.giphytrend.redux
 
 import android.util.Log
-import com.kostyrev.giphytrend.di.PerActivity
-import com.kostyrev.giphytrend.trending.action.StartAction
-import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.util.SchedulersFactory
+import com.kostyrev.redux.Action
+import com.kostyrev.redux.State
 import com.kostyrev.redux.SubscribableStore
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import javax.inject.Inject
 
-@PerActivity
-class TrendingViewBinder @Inject constructor(private val store: SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction>,
-                                             private val schedulers: SchedulersFactory) {
+class ViewBinder<out S : State, A : Action>(private val store: SubscribableStore<S, A>,
+                                            private val schedulers: SchedulersFactory,
+                                            private val startAction: A?) {
 
     private val disposable = CompositeDisposable()
 
-    fun bind(view: TrendingView) {
+    fun bind(view: BoundableView<S, A>) {
         disposable += store
                 .stateChanges()
                 .observeOn(schedulers.mainThread())
@@ -29,7 +26,7 @@ class TrendingViewBinder @Inject constructor(private val store: SubscribableStor
 
         disposable += store.subscribe()
 
-        store.dispatch(StartAction())
+        startAction?.let { store.dispatch(it) }
     }
 
     fun unbind() {

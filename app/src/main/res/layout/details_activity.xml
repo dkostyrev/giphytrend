@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fillViewport="true">
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ProgressBar
+			android:id="@+id/progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:visibility="gone"
+			tools:visibility="visible" />
+
+		<LinearLayout
+			android:id="@+id/content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<com.facebook.drawee.view.SimpleDraweeView
+				android:id="@+id/drawee_view"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				tools:layout_height="300dp" />
+
+			<RelativeLayout
+				android:id="@+id/user_info"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="16dp"
+				android:layout_marginRight="16dp"
+				android:layout_marginTop="16dp"
+				android:background="@color/colorPrimary"
+				android:padding="6dp">
+
+				<com.facebook.drawee.view.SimpleDraweeView
+					android:id="@+id/avatar"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:layout_marginRight="16dp"
+					app:actualImageScaleType="centerInside" />
+
+				<TextView
+					android:id="@+id/username"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/avatar"
+					android:textColor="@color/white"
+					android:textSize="14sp"
+					tools:text="username" />
+
+				<TextView
+					android:id="@+id/name"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@+id/username"
+					android:layout_marginTop="6dp"
+					android:layout_toRightOf="@id/avatar"
+					android:textColor="@color/white"
+					android:textSize="14sp"
+					tools:text="User Name" />
+
+			</RelativeLayout>
+
+			<TextView
+				android:id="@+id/twitter"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="16dp"
+				android:layout_marginRight="16dp"
+				android:layout_marginTop="6dp"
+				android:drawableLeft="@drawable/twitter"
+				android:drawablePadding="6dp"
+				android:gravity="center_vertical"
+				android:textColor="@color/white"
+				android:textSize="14sp"
+				tools:text="\@handle" />
+
+		</LinearLayout>
+
+	</FrameLayout>
+
+</ScrollView>

@@ -5,4 +5,5 @@
 	<color name="colorAccent">#FF4081</color>
 	<color name="progress_background">#303F9F</color>
 	<color name="progress">#FF4081</color>
+	<color name="white">#FFFFFF</color>
 </resources>
