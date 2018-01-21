@@ -77,7 +77,10 @@ internal class LoadTrendingMiddlewareTest {
     private fun positiveCases() = arrayOf(
             PositiveCase(StartAction(), TrendingState(loadState = null), LoadAction.Loading()),
             PositiveCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = null), LoadAction.Refreshing()),
-            PositiveCase(TrendingViewAction.Append(), TrendingState(loadState = null), LoadAction.Appending())
+            PositiveCase(TrendingViewAction.Append(), TrendingState(loadState = null), LoadAction.Appending()),
+            PositiveCase(TrendingViewAction.Retry(), TrendingState(loadState = Appending()), LoadAction.Appending()),
+            PositiveCase(TrendingViewAction.Retry(), TrendingState(loadState = Loading()), LoadAction.Loading()),
+            PositiveCase(TrendingViewAction.Retry(), TrendingState(loadState = Refreshing()), LoadAction.Refreshing())
     )
 
     @Test
@@ -129,7 +132,8 @@ internal class LoadTrendingMiddlewareTest {
             NegativeCase(TrendingViewAction.PullToRefresh(), TrendingState(loadState = Appending())),
             NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Refreshing())),
             NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Loading())),
-            NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Appending()))
+            NegativeCase(TrendingViewAction.Append(), TrendingState(loadState = Appending())),
+            NegativeCase(TrendingViewAction.Retry(), TrendingState(loadState = null))
     )
 
     @Test
