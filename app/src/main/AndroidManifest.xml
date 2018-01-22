@@ -21,5 +21,38 @@
 
 		<activity android:name=".details.DetailsActivity" />
 
+		<activity
+			android:name=".DeepLinkActivity"
+			android:noHistory="true"
+			android:theme="@android:style/Theme.NoDisplay">
+
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="http" />
+				<data android:scheme="https" />
+				<data android:host="giphy.com" />
+				<data android:host="www.giphy.com" />
+				<data android:pathPrefix="/gifs/" />
+
+			</intent-filter>
+
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data
+					android:host="gifs"
+					android:pathPrefix="/"
+					android:scheme="com.kostyrev.giphytrending" />
+
+			</intent-filter>
+
+		</activity>
 	</application>
 </manifest>
