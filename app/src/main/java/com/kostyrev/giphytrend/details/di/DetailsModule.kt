@@ -10,7 +10,6 @@ import com.kostyrev.giphytrend.details.middleware.NavigationMiddleware
 import com.kostyrev.giphytrend.details.reducer.LoadActionReducer
 import com.kostyrev.giphytrend.di.PerActivity
 import com.kostyrev.giphytrend.redux.ViewBinder
-import com.kostyrev.giphytrend.util.LoggingMiddleware
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Store
 import com.kostyrev.redux.SubscribableStore
@@ -34,7 +33,6 @@ class DetailsModule(private val id: String,
         return SubscribableStore(
                 reducers = listOf(loadActionReducer),
                 middleware = listOf(
-                        LoggingMiddleware(),
                         loadDetailsMiddleware,
                         navigationMiddleware
                 ),

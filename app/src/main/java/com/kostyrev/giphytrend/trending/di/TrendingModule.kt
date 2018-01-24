@@ -9,7 +9,6 @@ import com.kostyrev.giphytrend.trending.action.TrendingAction
 import com.kostyrev.giphytrend.trending.middleware.LoadTrendingMiddleware
 import com.kostyrev.giphytrend.trending.middleware.NavigationMiddleware
 import com.kostyrev.giphytrend.trending.reducer.LoadActionReducer
-import com.kostyrev.giphytrend.util.LoggingMiddleware
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Store
 import com.kostyrev.redux.SubscribableStore
@@ -35,7 +34,6 @@ class TrendingModule(private val router: NavigationMiddleware.Router) {
                         loadActionReducer
                 ),
                 middleware = listOf(
-                        LoggingMiddleware(),
                         loadTrendingMiddleware,
                         navigationMiddleware
                 ),

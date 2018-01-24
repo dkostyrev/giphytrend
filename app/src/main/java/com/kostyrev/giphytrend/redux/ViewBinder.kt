@@ -1,6 +1,5 @@
 package com.kostyrev.giphytrend.redux
 
-import android.util.Log
 import com.kostyrev.giphytrend.util.SchedulersFactory
 import com.kostyrev.redux.Action
 import com.kostyrev.redux.State
@@ -18,7 +17,6 @@ class ViewBinder<out S : State, A : Action>(private val store: SubscribableStore
         disposable += store
                 .stateChanges()
                 .observeOn(schedulers.mainThread())
-                .doOnNext { Log.i("Giphy", "New state $it") }
                 .subscribe { view.render(it) }
 
         disposable += view.actions
