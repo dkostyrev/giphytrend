@@ -13,19 +13,23 @@ import com.kostyrev.giphytrend.details.di.DetailsModule
 import com.kostyrev.giphytrend.details.middleware.NavigationMiddleware
 import com.kostyrev.giphytrend.di.ApplicationComponent
 import com.kostyrev.giphytrend.redux.ViewBinder
+import com.kostyrev.redux.Store
 import javax.inject.Inject
 
 class DetailsActivity : BaseActivity(), NavigationMiddleware.Router {
 
     @Inject
     lateinit var viewBinder: ViewBinder<@JvmWildcard DetailsState, @JvmWildcard DetailsAction>
+    @Inject
+    lateinit var store: Store<@JvmWildcard DetailsState, @JvmWildcard DetailsAction>
 
     override fun injectSelf(applicationComponent: ApplicationComponent, savedInstanceState: Bundle?) {
         val id = requireNotNull(intent?.getStringExtra(KEY_ID)) {
             "${DetailsActivity::class.java.simpleName} was created without $KEY_ID in Intent"
         }
+        val state = savedInstanceState?.getParcelable<DetailsState>(KEY_STATE)
         applicationComponent
-                .detailsComponent(DetailsModule(id, this))
+                .detailsComponent(DetailsModule(id, this, state))
                 .inject(this)
     }
 
@@ -33,6 +37,11 @@ class DetailsActivity : BaseActivity(), NavigationMiddleware.Router {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.details_activity)
         viewBinder.bind(DetailsView(findViewById<View>(android.R.id.content)))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_STATE, store.getState())
     }
 
     override fun followUri(uri: Uri) {
@@ -55,3 +64,4 @@ class DetailsActivity : BaseActivity(), NavigationMiddleware.Router {
 }
 
 private const val KEY_ID = "id"
+private const val KEY_STATE = "state"

@@ -1,5 +1,6 @@
 package com.kostyrev.giphytrend.trending.di
 
+import com.kostyrev.giphytrend.StateHolder
 import com.kostyrev.giphytrend.di.PerActivity
 import com.kostyrev.giphytrend.redux.ViewBinder
 import com.kostyrev.giphytrend.trending.TrendingState
@@ -16,8 +17,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class TrendingModule(private val router: NavigationMiddleware.Router,
-                     private val state: TrendingState? = null) {
+class TrendingModule(private val router: NavigationMiddleware.Router) {
 
     @PerActivity
     @Provides
@@ -27,7 +27,8 @@ class TrendingModule(private val router: NavigationMiddleware.Router,
     @Provides
     fun provideSubscribableStore(loadTrendingMiddleware: LoadTrendingMiddleware,
                                  navigationMiddleware: NavigationMiddleware,
-                                 loadActionReducer: LoadActionReducer):
+                                 loadActionReducer: LoadActionReducer,
+                                 stateHolder: StateHolder):
             SubscribableStore<@JvmWildcard TrendingState, @JvmWildcard TrendingAction> {
         return SubscribableStore(
                 reducers = listOf(
@@ -38,7 +39,7 @@ class TrendingModule(private val router: NavigationMiddleware.Router,
                         loadTrendingMiddleware,
                         navigationMiddleware
                 ),
-                initialState = state ?: TrendingState()
+                initialState = stateHolder.get() ?: TrendingState()
         )
     }
 
