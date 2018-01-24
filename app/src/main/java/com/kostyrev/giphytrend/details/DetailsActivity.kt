@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.annotation.VisibleForTesting
 import android.view.View
 import android.widget.Toast
 import com.kostyrev.giphytrend.BaseActivity
@@ -63,5 +64,6 @@ class DetailsActivity : BaseActivity(), NavigationMiddleware.Router {
 
 }
 
-private const val KEY_ID = "id"
+@VisibleForTesting
+internal const val KEY_ID = "id"
 private const val KEY_STATE = "state"

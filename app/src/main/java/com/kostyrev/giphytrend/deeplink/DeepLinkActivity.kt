@@ -1,4 +1,4 @@
-package com.kostyrev.giphytrend
+package com.kostyrev.giphytrend.deeplink
 
 import android.app.Activity
 import android.content.Intent

@@ -63,6 +63,7 @@ dependencies {
 
     androidTestImplementation(
             deps.testRunner,
-            deps.espresso
+            deps.espresso,
+            deps.espressoIntents
     )
 }

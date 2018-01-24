@@ -49,6 +49,7 @@ ext.deps = [
         hamcrest          : "org.hamcrest:hamcrest-library:$versions.hamcrest",
 
         testRunner        : "com.android.support.test:runner:$versions.testRunner",
-        espresso          : "com.android.support.test.espresso:espresso-core:$versions.espresso"
+        espresso          : "com.android.support.test.espresso:espresso-core:$versions.espresso",
+        espressoIntents   : "com.android.support.test.espresso:espresso-intents:$versions.espresso"
 ]
 
