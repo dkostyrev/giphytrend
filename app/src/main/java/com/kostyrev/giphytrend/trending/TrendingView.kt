@@ -28,9 +28,7 @@ class TrendingView(private val view: View) : BoundableView<TrendingState, Trendi
     private var snackbar: Snackbar? = null
 
     init {
-        val screenWidth = view.resources.displayMetrics.widthPixels
-        val gifWidth = view.resources.getDimensionPixelSize(R.dimen.gif_width)
-        val spanCount = screenWidth / gifWidth
+        val spanCount = view.resources.getInteger(R.integer.columns_count)
         recycler.layoutManager = StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL)
         adapter.setHasStableIds(true)
     }

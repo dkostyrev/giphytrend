@@ -1,6 +1,5 @@
 package com.kostyrev.giphytrend.trending.list
 
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.RelativeLayout
@@ -10,7 +9,6 @@ import com.kostyrev.giphytrend.R
 import com.kostyrev.giphytrend.api.model.Image
 import com.kostyrev.giphytrend.list.ListItem
 import com.kostyrev.giphytrend.list.ListItemView
-import com.kostyrev.giphytrend.util.CircleProgressBarDrawable
 import com.kostyrev.giphytrend.util.setProgressBar
 import io.reactivex.functions.Consumer
 
@@ -29,7 +27,10 @@ class GifItemView(view: View,
         if (image.webp != previousImage?.webp) {
             with(draweeView.layoutParams as RelativeLayout.LayoutParams) {
                 val aspectRatio = image.width.toFloat() / image.height.toFloat()
-                height = Math.round(draweeView.resources.getDimensionPixelSize(R.dimen.gif_width) / aspectRatio)
+                val resources = draweeView.resources
+                val padding = resources.getDimensionPixelSize(R.dimen.gif_item_padding)
+                val width = resources.displayMetrics.widthPixels / resources.getInteger(R.integer.columns_count) - padding * 2
+                height = Math.round(width / aspectRatio)
                 draweeView.layoutParams = this
             }
             draweeView.controller = Fresco.newDraweeControllerBuilder()
